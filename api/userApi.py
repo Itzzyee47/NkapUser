@@ -7,6 +7,12 @@ user_Ref = db.collection('user')
 
 userAPI = Blueprint('userAPI', __name__)
 
+@userAPI.route("/")
+def home():
+    
+    
+    return render_template('index.html')
+
 @userAPI.route("/add", methods=['POST'])
 def create():
     try:
@@ -16,7 +22,7 @@ def create():
     except Exception as e:
         return f"An Error Occured: {e}"
     
-@userAPI.route("/getUser" )
+@userAPI.route("/getUser", methods=['GET'] )
 def read():
     try:
         all_users = [doc.to_dict() for doc in user_Ref.stream()]
