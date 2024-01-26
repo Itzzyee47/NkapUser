@@ -11,6 +11,6 @@ def create_app():
     
     from .userApi import userAPI
     
-    app.register_blueprint(userAPI, url_prefix='/user')
+    app.register_blueprint(userAPI, url_prefix='/')
     
     return app
