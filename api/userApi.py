@@ -89,6 +89,7 @@ def addImage():
 def create():
     try:
         id = uuid.uuid4()
+        # request of json type{ address: "Buea", email: "JonesD@gmail.com", frist name: "Dave", last name: "Jones", password: "JoneS123", pin: "", roll: ""}
         user_Ref.document(id.hex).set(request.json)
         return jsonify({"success": True}), 200
     except Exception as e:
