@@ -4,6 +4,8 @@ from firebase_admin import firestore, storage
 
 db = firestore.client()
 user_Ref = db.collection('user')
+group_Ref = db.collection('group')
+member_Ref = db.collection('member')
 
 userAPI = Blueprint('userAPI', __name__)
 
@@ -100,5 +102,41 @@ def read():
     except Exception as e:
         return f"An Error Occured: {e}"
     
+@userAPI.route("/addGroup", methods=['POST'])
+def createG():
+    try:
+        id = uuid.uuid4()
+        group_Ref.document(id.hex).set(request.json)
+        # request of json type{ groupHead:"", name: "exampleGroup"}
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+    
+@userAPI.route("/getGroups", methods=['GET'] )
+def readG():
+    try:
+        all_groups = [doc.to_dict() for doc in group_Ref.stream()]
+        return jsonify(all_groups), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+    
+# ****************************************************
+@userAPI.route("/addMember", methods=['POST'])
+def createM():
+    try:
+        id = uuid.uuid4()
+        # request of json type{ groupName: "exampleGroup", role: "", userEmail: "example@gmail.com", userName: "Exname"}
+        member_Ref.document(id.hex).set(request.json)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
+    
+@userAPI.route("/getMembers", methods=['GET'] )
+def readM():
+    try:
+        all_members = [doc.to_dict() for doc in member_Ref.stream()]
+        return jsonify(all_members), 200
+    except Exception as e:
+        return f"An Error Occured: {e}"
     
     
