@@ -85,7 +85,7 @@ def addImage():
     except Exception as e:
         return f"An Error Occured: {e}"
 # ***************************************************************************
-@userAPI.route("/add", methods=['POST'])
+@userAPI.route("/add", methods=['POST']) #To add a user during registration.....
 def create():
     try:
         id = uuid.uuid4()
@@ -95,7 +95,7 @@ def create():
     except Exception as e:
         return f"An Error Occured: {e}"
     
-@userAPI.route("/getUser", methods=['GET'] )
+@userAPI.route("/getUser", methods=['GET'] ) #To get all users............
 def read():
     try:
         all_users = [doc.to_dict() for doc in user_Ref.stream()]
@@ -103,17 +103,17 @@ def read():
     except Exception as e:
         return f"An Error Occured: {e}"
     
-@userAPI.route("/addGroup", methods=['POST'])
+@userAPI.route("/addGroup", methods=['POST']) #To create a group..........
 def createG():
     try:
         id = uuid.uuid4()
-        group_Ref.document(id.hex).set(request.json)
+        group_Ref.document(id.hex).set(request.json) # groupHead is the person creating the group....
         # request of json type{ groupHead:"", name: "exampleGroup"}
         return jsonify({"success": True}), 200
     except Exception as e:
         return f"An Error Occured: {e}"
     
-@userAPI.route("/getGroups", methods=['GET'] )
+@userAPI.route("/getGroups", methods=['GET'] ) # To get all groups...........
 def readG():
     try:
         all_groups = [doc.to_dict() for doc in group_Ref.stream()]
@@ -122,7 +122,7 @@ def readG():
         return f"An Error Occured: {e}"
     
 # ****************************************************
-@userAPI.route("/addMember", methods=['POST'])
+@userAPI.route("/addMember", methods=['POST']) # To add a member..................
 def createM():
     try:
         id = uuid.uuid4()
@@ -132,10 +132,13 @@ def createM():
     except Exception as e:
         return f"An Error Occured: {e}"
     
-@userAPI.route("/getMembers", methods=['GET'] )
+@userAPI.route("/getMembers", methods=['GET'] ) # To get members of a given group................
 def readM():
     try:
-        all_members = [doc.to_dict() for doc in member_Ref.stream()]
+        data = request.get_json()
+        membersOf =  data.get('groupName')
+        query = member_Ref.where('email', '==', membersOf)
+        all_members = [doc.to_dict() for doc in query.stream()]
         return jsonify(all_members), 200
     except Exception as e:
         return f"An Error Occured: {e}"
