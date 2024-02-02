@@ -135,10 +135,7 @@ def createM():
 @userAPI.route("/getMembers", methods=['GET'] ) # To get members of a given group................
 def readM():
     try:
-        data = request.get_json()
-        membersOf =  data.get('groupName')
-        query = member_Ref.where('email', '==', membersOf)
-        all_members = [doc.to_dict() for doc in query.stream()]
+        all_members = [doc.to_dict() for doc in member_Ref.stream()]
         return jsonify(all_members), 200
     except Exception as e:
         return f"An Error Occured: {e}"
